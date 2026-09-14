@@ -3,11 +3,12 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   experimental: {
     serverActions: {
-      bodySizeLimit: "10mb", // naikkan sesuai kebutuhan, misal 10MB
+      bodySizeLimit: "10mb",
     },
   },
   outputFileTracingIncludes: {
     "/*": ["./lib/generated/prisma/**/*"],
+    "/**/*": ["./lib/generated/prisma/**/*"],
   },
 };
 
