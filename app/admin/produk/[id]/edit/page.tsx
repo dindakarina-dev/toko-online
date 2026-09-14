@@ -67,6 +67,26 @@ export default async function HalamanEditProduk({
           />
         </div>
 
+        <div>
+          <label className="mb-1 block font-medium">Gambar Produk</label>
+          {produk.imageUrl && (
+            <img
+              src={produk.imageUrl}
+              alt={produk.name}
+              className="mb-2 h-32 w-32 rounded border object-cover"
+            />
+          )}
+          <input
+            type="file"
+            name="gambar"
+            accept="image/*"
+            className="w-full rounded border p-2"
+          />
+          <p className="mt-1 text-xs text-gray-500">
+            Biarkan kosong kalau tidak mau mengubah gambar yang sudah ada.
+          </p>
+        </div>
+
         <button
           type="submit"
           className="rounded bg-black px-4 py-2 text-white"

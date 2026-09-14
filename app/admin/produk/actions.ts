@@ -123,10 +123,22 @@ export async function ubahProduk(id: number, formData: FormData) {
   const description = formData.get("description") as string;
   const slug = name.toLowerCase().trim().replace(/\s+/g, "-");
 
+  // Kalau ada file baru dipilih, simpan dan pakai itu. Kalau tidak, biarkan
+  // gambar yang sudah ada (jangan timpa jadi null).
+  const file = formData.get("gambar") as File;
+  const imageUrlBaru = await simpanGambar(file);
+
    try {
     await prisma.product.update({
       where: { id },
-      data: { name, slug, price, stock, description },
+      data: {
+        name,
+        slug,
+        price,
+        stock,
+        description,
+        ...(imageUrlBaru ? { imageUrl: imageUrlBaru } : {}),
+      },
     });
   } catch (e) {
     console.error("Gagal mengubah produk:", e);
