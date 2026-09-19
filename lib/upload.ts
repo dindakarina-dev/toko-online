@@ -1,5 +1,4 @@
-import { writeFile } from "fs/promises";
-import path from "path";
+import { put } from "@vercel/blob";
 
 export async function simpanGambar(file: File): Promise<string | null> {
   // Kalau tidak ada file dipilih, kembalikan null (imageUrl kosong)
@@ -7,17 +6,12 @@ export async function simpanGambar(file: File): Promise<string | null> {
     return null;
   }
 
-  // Ubah file jadi data biner
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
-
   // Bikin nama unik: waktu sekarang + nama asli (spasi dibuang)
   const namaUnik = `${Date.now()}-${file.name.replace(/\s+/g, "-")}`;
 
-  // Tentukan lokasi simpan: <project>/public/uploads/<namaUnik>
-  const tujuan = path.join(process.cwd(), "public", "uploads", namaUnik);
-  await writeFile(tujuan, buffer);
+  // Sistem file Vercel read-only, jadi simpan ke Vercel Blob (butuh env
+  // BLOB_READ_WRITE_TOKEN). URL yang dikembalikan bisa diakses publik.
+  const blob = await put(`uploads/${namaUnik}`, file, { access: "public" });
 
-  // URL yang bisa diakses browser (public/ tidak ikut ditulis di URL)
-  return `/uploads/${namaUnik}`;
+  return blob.url;
 }
